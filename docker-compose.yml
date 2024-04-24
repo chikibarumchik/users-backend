@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: users_local
+      POSTGRES_USER: users_local
+      POSTGRES_PASSWORD: ''
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    container_name: rabbitmq_container
+    restart: always
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+volumes:
+  db-data:
